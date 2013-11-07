@@ -16,6 +16,44 @@
 	font-size: 125%;
 }
 
+.pure-button-success,
+.pure-button-error,
+.pure-button-warning,
+.pure-button-secondary {
+	color: white;
+	border-radius: 4px;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.pure-button-success {
+	background: rgb(28, 184, 65); /* this is a green */
+}
+
+.pure-button-error {
+	background: rgb(202, 60, 60); /* this is a maroon */
+}
+
+.pure-button-warning {
+	background: rgb(223, 117, 20); /* this is an orange */
+}
+
+.pure-button-secondary {
+	background: rgb(66, 184, 221); /* this is a light blue */
+}
+
+.pure-button-sketch {
+	background: #fff;
+	border: 1px solid #ddd;
+	color: #666;
+	background: #fff; /* this is a white */
+}
+
+.pure-button-sketch.pure-button-hover,
+.pure-button-sketch.pure-button:hover,
+.pure-button-sketch.pure-button:focus {
+	background: #eee;
+}
+
 /* menu */
 
 #nav .pure-menu {
@@ -38,4 +76,10 @@
 #nav .pure-menu .pure-menu-selected a:hover, 
 #nav .pure-menu .pure-menu-selected a:focus {
 	background: rgb(31, 141, 214);
+}
+
+#nav .pure-menu-heading {
+	border-bottom: none;
+	font-size: 110%;
+	color: rgb(75, 113, 151);
 }

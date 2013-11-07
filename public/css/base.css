@@ -1,27 +1,35 @@
 /* global*/
 
+a {
+	text-decoration: none;
+	color: #1b98f8;
+}
+
 .avatar {
 	border-radius: 3px;
 	margin-right: 0.5em;
 }
 
 #layout {
-	padding-left: 600px;
+	padding-left: 700px;
 	position: relative;
+}
+
+#nav, #list {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	overflow: auto;
 }
 
 /* #nav */
 
 #nav {
 	width: 250px;
-	margin-left: -600px;
+	margin-left: -700px;
 	background: rgb(37, 42, 58);
 	text-align: center;
 	padding: 2em 0;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	overflow: auto;
 }
 
 #nav .nav-inner {
@@ -42,4 +50,13 @@
 
 #nav .pure-menu {
 	padding-top: 20px;
+}
+
+
+/* list */
+
+#list {
+	margin-left: -450px;
+	width: 450px;
+	border-right: 1px solid #ddd;
 }
