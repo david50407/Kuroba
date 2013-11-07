@@ -3,7 +3,7 @@ RewriteBase /guestbook/
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_URI} ^/guestbook/(.+)$
-RewriteCond %{DOCUMENT_ROOT}/public/%1 -f
+RewriteCond /home/david50407/guestbook/public/%1 -f
 RewriteRule ^(.*)$ public/%1 [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f

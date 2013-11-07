@@ -8,6 +8,6 @@ Theogony\ConfigCore::draw(function($config) {
 	});
 
 	$config->site = new ArrayObject();
-	$config->site->title = '一人一種 PHP FRAMEWORK';
+	$config->site->title = 'Kurōbā';
 });
 ?>

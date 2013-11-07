@@ -1,0 +1,45 @@
+/* global*/
+
+.avatar {
+	border-radius: 3px;
+	margin-right: 0.5em;
+}
+
+#layout {
+	padding-left: 600px;
+	position: relative;
+}
+
+/* #nav */
+
+#nav {
+	width: 250px;
+	margin-left: -600px;
+	background: rgb(37, 42, 58);
+	text-align: center;
+	padding: 2em 0;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	overflow: auto;
+}
+
+#nav .nav-inner {
+	color: #fff;
+}
+
+#nav #accountStatus {
+	text-align: left;
+	border-bottom: 1px rgb(84, 91, 114) solid;
+	padding-bottom: 20px;
+	margin: 0 20px;
+}
+
+#nav #accountStatus .account-nick,
+#nav #accountStatus .account-level {
+	margin: 0 0 .4em 0;
+}
+
+#nav .pure-menu {
+	padding-top: 20px;
+}

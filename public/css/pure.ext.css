@@ -1,0 +1,41 @@
+/* button */
+
+.pure-button-xsmall {
+	font-size: 70%;
+}
+
+.pure-button-small {
+	font-size: 85%;
+}
+
+.pure-button-large {
+	font-size: 110%;
+}
+
+.pure-button-xlarge {
+	font-size: 125%;
+}
+
+/* menu */
+
+#nav .pure-menu {
+	background: transparent;
+	border: none;
+	text-align: left;
+}
+
+#nav .pure-menu a {
+	color: #fff;
+	margin-left: 0.5em;
+}
+
+#nav .pure-menu a:hover, 
+#nav .pure-menu a:focus {
+	background: rgb(55, 60, 90);
+}
+
+#nav .pure-menu .pure-menu-selected a, 
+#nav .pure-menu .pure-menu-selected a:hover, 
+#nav .pure-menu .pure-menu-selected a:focus {
+	background: rgb(31, 141, 214);
+}
