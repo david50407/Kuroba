@@ -26,7 +26,8 @@ class ControllerBase
 		$config = \Theogony\ConfigCore::getInstance();
 		$this->cache->action = $action;
 		$layout_path = dirname(__FILE__) . '/../app/views/layouts/';
-		if (isset($this->settings->layout))
+		$pjax = isset($_SERVER['HTTP_X_PJAX']);
+		if (isset($this->settings->layout) and !$pjax)
 		{
 			if (!@file_exists($layout_path . $this->settings->layout . '.' . $this->format . '.php'))
 				throw new \Theogony\Exceptions\NoAvailableLayoutException('layouts/' . $this->settings->layout . '.' . $this->format);
@@ -34,9 +35,9 @@ class ControllerBase
 		}
 		else
 		{
-			if (@file_exists($layout_path . $this->cache->controller . '.' . $this->format . '.php'))
+			if (@file_exists($layout_path . $this->cache->controller . '.' . $this->format . '.php') and !$pjax)
 				include $layout_path . $this->cache->controller . '.' . $this->format . '.php';
-			else if (@file_exists($layout_path . 'application.' . $this->format . '.php'))
+			else if (@file_exists($layout_path . 'application.' . $this->format . '.php') and !$pjax)
 				include $layout_path . 'application.' . $this->format . '.php';
 			else
 			{
@@ -60,7 +61,7 @@ class ControllerBase
 		else if (@file_exists($layout_path . '_' . $file . '.' . $this->format . '.php'))
 			include $layout_path . '_' . $file . '.' . $this->format . '.php';
 		else
-			throw new \Theogony\Exceptions\NoAvailableLayoutException($this->cache->controller . '\_' . $file . '.' . $this->format);
+			throw new \Theogony\Exceptions\NoAvailableLayoutException($this->cache->controller . '/_' . $file . '.' . $this->format);
 	}
 	public function mixin()
 	{
@@ -71,9 +72,9 @@ class ControllerBase
 
 		$path = dirname(__FILE__) . '/../app/views/' . $this->cache->controller . '/';
 		$this->cache->usedLayout = false;
-		if (!@file_exists($path . $action . '.' . $this->format . '.php'))
-			throw new \Theogony\Exceptions\NoAvailableLayoutException($this->cache->controller . $action . '.' . $this->format);
-		include $path . $action . '.' . $this->format . '.php';
+		if (!@file_exists($path . $this->cache->action . '.' . $this->format . '.php'))
+			throw new \Theogony\Exceptions\NoAvailableLayoutException($this->cache->controller . '/' . $this->cache->action . '.' . $this->format);
+		include $path . $this->cache->action . '.' . $this->format . '.php';
 	}
 }
 

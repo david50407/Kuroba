@@ -1,0 +1,18 @@
+#container-login {
+	background-color: #eee;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 250px;
+}
+
+.login-slogan {
+	text-align: right;
+	border-right: 1px rgb(84, 91, 114) solid;
+	padding-right: 1em;
+}
+
+.login-container {
+	margin: 9em .5em 0;
+}

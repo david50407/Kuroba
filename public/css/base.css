@@ -1,4 +1,4 @@
-/* global*/
+/* global */
 
 a {
 	text-decoration: none;
@@ -15,16 +15,13 @@ a {
 	position: relative;
 }
 
-#nav, #list {
+/* #nav */
+
+#nav {
 	position: fixed;
 	top: 0;
 	bottom: 0;
 	overflow: auto;
-}
-
-/* #nav */
-
-#nav {
 	width: 250px;
 	margin-left: -250px;
 	background: rgb(37, 42, 58);
@@ -52,15 +49,23 @@ a {
 	padding-top: 20px;
 }
 
-
 /* 2 columns */
 
 .container-2 {
 	margin-left: 450px;
 }
-.container-2 #list {
+.container-2 .container-list {
 	margin-left: -450px;
 	width: 450px;
 	border-right: 1px solid #ddd;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	overflow: auto;
 }
 
+.container-1.hide, 
+.container-2.hide {
+	display: none;
+	visible: hidden;
+}

@@ -72,7 +72,7 @@ class RoutesCore
 
 		// make str to regexp
 		$str = preg_replace('/\)/', ')?', $obj['str']);
-		$str = preg_replace('/:(\w+)/', '(?P<$1>.+)', $str);
+		$str = preg_replace('/:(\w+)/', '(?P<${1}>\w+)', $str);
 		$obj['regex'] = '#^' . $str . '$#';
 
 		$this->__matches[] = $obj;
@@ -135,7 +135,7 @@ class RoutesCore
 			
 			$option['status'] = 404;
 			# TODO: load 404 page
-			header('Location: /');
+			#header('Location: /');
 			return;
 		}
 		else
@@ -150,7 +150,7 @@ class RoutesCore
 			$temp->option = $option;
 			$controller->_setData($temp);
 			$controller->$option['action']($temp);
-			$controller->_view($option['controller']);
+			$controller->_view($option['action']);
 		}
 	}
 }

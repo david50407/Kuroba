@@ -3,6 +3,6 @@
 	<div class="pure-u">
 		<h4 class="account-nick">Guest</h4>
 		<h5 class="account-level">Lv. ???</h5>
-		<a href="/account/login" class="pure-button pure-button-small pure-button-primary">Login</a>
+		<a href="account/login" class="pure-button pure-button-small pure-button-primary" data-pjax="login">Login</a>
 	</div>
 </div>
