@@ -12,7 +12,7 @@ $(function() {
 	History.Adapter.bind(window, 'statechange', function() {
 		var state = History.getState();
 		$.ajax({
-			url: state.url,
+			url: state.url + "?_seed=" + Math.random(),
 			beforeSend: function (xhr) {
 				xhr.setRequestHeader('X-PJAX', 'true');
 			}

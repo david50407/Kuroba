@@ -81,6 +81,12 @@ class RoutesCore
 	public function parse()
 	{
 		$request = $_SERVER['REQUEST_URI'];
+		if (isset($_SERVER['QUERY_STRING']))
+		{
+			$pos = strrpos($_SERVER['REQUEST_URI'], "?" . $_SERVER['QUERY_STRING']);
+			if ($pos !== false)
+				$request = substr($request, 0, $pos);
+		}
 		$request_arr = array_values(array_diff(explode('/', $request), array(null, '')));
 		if ($this->predir != '')
 		{
