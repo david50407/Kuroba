@@ -26,7 +26,7 @@ class ControllerBase
 		$config = \Theogony\ConfigCore::getInstance();
 		$this->cache->action = $action;
 		$layout_path = dirname(__FILE__) . '/../app/views/layouts/';
-		$pjax = isset($_SERVER['HTTP_X_PJAX']);
+		$pjax = isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true';
 		if (isset($this->settings->layout) and !$pjax)
 		{
 			if (!@file_exists($layout_path . $this->settings->layout . '.' . $this->format . '.php'))
