@@ -11,7 +11,7 @@ a {
 }
 
 #layout {
-	padding-left: 700px;
+	padding-left: 250px;
 	position: relative;
 }
 
@@ -26,7 +26,7 @@ a {
 
 #nav {
 	width: 250px;
-	margin-left: -700px;
+	margin-left: -250px;
 	background: rgb(37, 42, 58);
 	text-align: center;
 	padding: 2em 0;
@@ -53,10 +53,14 @@ a {
 }
 
 
-/* list */
+/* 2 columns */
 
-#list {
+.container-2 {
+	margin-left: 450px;
+}
+.container-2 #list {
 	margin-left: -450px;
 	width: 450px;
 	border-right: 1px solid #ddd;
 }
+
