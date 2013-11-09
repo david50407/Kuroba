@@ -1,4 +1,5 @@
-#container-login {
+#container-login,
+#container-register {
 	background-color: #eee;
 	position: fixed;
 	top: 0;
@@ -7,12 +8,14 @@
 	left: 250px;
 }
 
-.login-slogan {
+.login-slogan,
+.register-slogan {
 	text-align: right;
 	border-right: 1px rgb(84, 91, 114) solid;
 	padding-right: 1em;
 }
 
-.login-container {
+.login-container,
+.register-container {
 	margin: 9em .5em 0;
 }

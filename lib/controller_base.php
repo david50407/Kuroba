@@ -20,6 +20,11 @@ class ControllerBase
 		$this->data = &$collection;
 	}
 
+	public function _setFormat($format)
+	{
+		$this->format = $format;
+	}
+
 	public function _view($action)
 	{
 		$_ = &$this->data; # sugar

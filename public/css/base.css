@@ -63,9 +63,3 @@ a {
 	bottom: 0;
 	overflow: auto;
 }
-
-.container-1.hide, 
-.container-2.hide {
-	display: none;
-	visible: hidden;
-}

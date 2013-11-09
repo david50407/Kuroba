@@ -1,5 +1,13 @@
 <div id="container-msg-general" class="pure-g-r container-2">
 	<div class="pure-u-1 container-list">
+		<div class="pure-g msg-item msg-item-post" data-msg="new">
+			<div class="pure-u"><img src="http://placehold.it/64.png" alt="" class="avatar" /></div>
+			<div class="pure-u-4-5">
+				<h5 class="msg-author">Guest</h5>
+				<h4 class="msg-title">New message</h4>
+				<p class="msg-content">Click here to leave new message...</p>
+			</div>
+		</div>
 		<div class="pure-g msg-item msg-item-selected">
 			<div class="pure-u"><img src="http://placehold.it/64.png" alt="" class="avatar" /></div>
 			<div class="pure-u-4-5">

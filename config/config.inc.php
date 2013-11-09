@@ -9,5 +9,6 @@ Theogony\ConfigCore::draw(function($config) {
 
 	$config->site = new ArrayObject();
 	$config->site->title = 'Kurōbā';
+	$config->site->baseurl = 'http://' . $_SERVER["SERVER_NAME"] . '/guestbook/';
 });
 ?>

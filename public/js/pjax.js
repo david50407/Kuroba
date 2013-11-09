@@ -2,11 +2,7 @@ $(function() {
 	$(document).on('click', 'a[data-pjax]', function(event) {
 		event.preventDefault();
 		var self = $(this);
-		var option = {
-			url:    self.attr("href"),
-			target: self.attr("data-pjax")
-		};
-		History.pushState(option, option.target, option.url);
+		History.pushState(null, null, self.attr('href'));
 	});
 
 	History.Adapter.bind(window, 'statechange', function() {
@@ -18,12 +14,21 @@ $(function() {
 			}
 		})
 		.done(function (data) {
-			var html = $(data);
-			var old_box = $("#" + html.attr("id"));
-			if (old_box.length > 0)
-				old_box.remove();
-			$(".container-1, .container-2").addClass("hide");
-			$("#main").append(html);
+			var html = $(data).hide();
+			$("#" + html.attr("id")).remove();
+			$(".container-1, .container-2").stop().hide({
+				effect: 'fade',
+				easing: 'easeInExpo',
+				duration: 200,
+				complete: function() {
+					$("#main").append(html);
+					html.show({
+						effect: 'fade',
+						easing: 'easeOutExpo',
+						duration: 200
+					});
+				}
+			});
 		});
 	});
 

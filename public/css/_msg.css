@@ -19,6 +19,10 @@
 	margin: 0.4em 0;
 }
 
+.msg-item-post {
+	color: #999;
+}
+
 .msg-item-selected {
 	background: #eee;
 }
@@ -75,3 +79,4 @@
 .msg-detail-reply {
 	margin-left: 72px;
 }
+

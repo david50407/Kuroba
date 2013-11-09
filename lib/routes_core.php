@@ -146,9 +146,11 @@ class RoutesCore
 		}
 		else
 		{
+			if (!isset($option['format']))
+				$option['format'] = 'html';
+
 			if (!@file_exists(dirname(__FILE__) . '/../app/controllers/' . $option['controller'] . '_controller.php'))
 				throw new \Theogony\Exceptions\NoAvailableControllerException($option['controller']);
-
 			include_once dirname(__FILE__) . '/../app/controllers/' . $option['controller'] . '_controller.php';
 			$controller = ucfirst(strtolower($option['controller'])) . 'Controller';
 			$controller = new $controller();
@@ -156,6 +158,7 @@ class RoutesCore
 			$temp->option = $option;
 			$controller->_setData($temp);
 			$controller->$option['action']($temp);
+			$controller->_setFormat($option['format']);
 			$controller->_view($option['action']);
 		}
 	}

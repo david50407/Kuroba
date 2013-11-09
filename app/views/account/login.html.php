@@ -1,11 +1,11 @@
-<div id="container-login" class="pure-g-r container-1">
+<div id="container-login" class="pure-g-r container-1" data-cache>
 	<!-- login -->
 	<div class="pure-u-1 container-content">
 		<div class="pure-g login-container">
 			<div class="pure-u-1-2">
 				<div class="login-slogan">
 					<h2>Login <?= $config->site->title ?>, posting message</h2>
-					or <a href="#" data-pjax="login">Register</a> NOW
+					or now <a href="account/register" data-pjax="register" data-pjax-cache="true">Register</a>
 				</div>
 			</div>
 			<div class="pure-u-1-2">
