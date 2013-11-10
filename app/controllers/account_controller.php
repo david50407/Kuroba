@@ -65,6 +65,23 @@ class AccountController extends \Theogony\ControllerBase
 			}
 
 			// check if username or email repeats
+			$db = \Theogony\ConfigCore::getInstance()->database;
+			// $res = Account.where(['username' => trim($_POST['username']),
+			// 	':or' => ['email' => trim($_POST['email'])]
+			// ]);
+			$res = $db->from("accounts")->where([':or',
+				'username' => $_POST['username'],
+				'email' => $_POST['email']
+			])->run();
+			//if (!$res->empty()) // repeated
+			if (count($res) > 0) {
+				$_->status = -2;
+				$_->error[] = array(
+					'target' => '',
+					'msg' => 'Username or email has been used, or you may want to <a href="account/login" data-pjax="login">login</a>.'
+				);
+				return;
+			}
 		}
 	}
 }

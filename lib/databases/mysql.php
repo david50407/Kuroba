@@ -7,7 +7,7 @@ class Mysql
 	private $config;
 	private $connection;
 	private $command = array();
-	private $deplicated = false;
+	private $duplicated = false;
 	public function __construct($callback)
 	{
 		$this->config = new \Theogony\Struct\DataCollection();
@@ -26,13 +26,13 @@ class Mysql
 
 	public function __clone()
 	{
-		$this->deplicated = true;
+		$this->duplicated = true;
 		$this->command = array();
 	}
 
 	public function from($table)
 	{
-		if (!$this->deplicated)
+		if (!$this->duplicated)
 			$rtn = clone $this;
 		else
 			$rtn = $this;
@@ -41,21 +41,82 @@ class Mysql
 		return $rtn;
 	}
 
-	public function where($fetch)
+	public function where($connection)
 	{
-		if (!$this->deplicated)
+		if (!$this->duplicated)
 			$rtn = clone $this;
 		else
 			$rtn = $this;
 
-		$rtn->command['fetch'] = $this->connection->real_escape_string($fetch);
+		$rtn->command['where'] = $this->__where($connection);
 
+		return $rtn;
+	}
+
+	private function __where($condition)
+	{
+		$parts = array();
+		$type = $condition[0] === ':or' ? ' OR ' : 'AND';
+		foreach ($condition as $k => $v)
+			if (is_numeric($k))
+				if (is_array($v)) // sub case
+					$parts[] = '(' . __where($v) . ')';
+				else
+					; // do nothing
+			else // key => value
+				if (is_array($v)) // in / like / operators / functions
+					$parts[] = "`{$this->connection->real_escape_string($k)}` " . $this->__where_func($v);
+				else
+					$parts[] = "`{$this->connection->real_escape_string($k)}` = '{$this->connection->real_escape_string($v)}'";
+		$rtn = implode($type, $parts);
+		return $rtn;
+	}
+
+	private function __where_func($condition)
+	{
+		$rtn = '';
+		switch ($condition[0])
+		{
+			case ':<>':
+			case ':!=':
+				$rtn = '<> ' . $this->connection->real_escape_string($connection[1]);
+				break;
+			case ':notin':
+				unset($condition[0]);
+				$rtn = 'NOT IN ( ' .
+					implode(' , ', 
+						array_map(function ($item) { return $this->connection->real_escape_string($item); }, $condition)
+					) .
+					' )';
+				break;
+			// case ':%':
+			// case ':like':
+
+			// case ':>':
+			// case ':<':
+			// case ':<=':
+			// case ':>=':
+			// case ':=':
+
+			// case ':~':
+			// case ':between':
+
+			case ':(':
+			case ':in':
+			default:
+				$rtn = 'IN ( ' .
+					implode(' , ', 
+						array_map(function ($item) { return $this->connection->real_escape_string($item); }, $condition)
+					) .
+					' )';
+				break;
+		}
 		return $rtn;
 	}
 
 	public function limit($limit)
 	{
-		if (!$this->deplicated)
+		if (!$this->duplicated)
 			$rtn = clone $this;
 		else
 			$rtn = $this;
