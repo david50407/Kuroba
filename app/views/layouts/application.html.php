@@ -9,15 +9,20 @@
 	<base href="<?= $config->site->baseurl ?>" />
 	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css" />
 	<link rel="stylesheet" href="css/pure.ext.css" />
+	<link rel="stylesheet" href="css/ladda.css" />
 	<link rel="stylesheet" href="css/base.css" />
 	<link rel="stylesheet" href="css/_msg.css" />
 	<link rel="stylesheet" href="css/_account.css" />
 	<script>window.$BASE = "<?= $config->site->baseurl ?>";</script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script async src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	<script async src="js/jquery.history.js"></script>
-	<script async src="js/pjax.js"></script>
-	<script async src="js/hogan.js"></script>
+	<script defer src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script defer src="js/jquery.history.js"></script>
+	<script defer src="js/pjax.js"></script>
+	<script defer src="js/pjax.form.js"></script>
+	<script defer src="js/hogan.js"></script>
+	<script defer src="js/ladda.spin.js"></script>
+	<script defer src="js/ladda.js"></script>
+	<script defer src="js/ladda.jquery.js"></script>
 </head>
 <body>
 	<div id="layout" class="pure-g-r">

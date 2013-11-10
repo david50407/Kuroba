@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 	$(document).on('click', 'a[data-pjax]', function(event) {
 		event.preventDefault();
 		var self = $(this);

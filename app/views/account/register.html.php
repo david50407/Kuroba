@@ -9,7 +9,7 @@
 				</div>
 			</div>
 			<div class="pure-u-1-2">
-				<form class="pure-form pure-form-aligned register-form" action="account/register" method="post">
+				<form class="pure-form pure-form-aligned register-form" action="account/register" method="post" data-pjax>
 					<fieldset>
 						<div class="pure-control-group">
 							<label for="username">Username</label>
@@ -29,9 +29,9 @@
 						</div>	
 						<div class="pure-controls">
 							<label for="rule" class="pure-checkbox">
-								<input id="rule" type="checkbox"> I promise that I'm real person, not a robot.
+								<input id="rule" type="checkbox"> I promise that I'm real creature, not a robot.
 							</label>
-							<button type="submit" class="pure-button pure-button-primary">Login</button>
+							<button type="submit" class="pure-button pure-button-primary ladda-button" data-style="zoom-out">Register</button>
 						</div>
 					</fieldset>
 				</form>

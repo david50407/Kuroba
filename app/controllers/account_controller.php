@@ -6,35 +6,35 @@ class AccountController extends \Theogony\ControllerBase
 	public function login(&$_) {}
 	public function register(&$_) {
 		// registing: POST
-		if ($_->option['format'] == 'json') {
-			$_->status = 0;
-			$_->error = array();
+		$_->status = 0;
+		$_->error = array();
+		if (isset($_POST['username'])) {
 			// check if empty
 			if (!isset($_POST['username']) || trim($_POST['username']) === "") {
 				$_->status = -1;
 				$_->error[] = array(
-					'target' => '#username',
+					'target' => 'username',
 					'msg' => 'Username must be entered.'
 				);
 			}
 			if (!isset($_POST['password']) || trim($_POST['password']) === "") {
 				$_->status = -1;
 				$_->error[] = array(
-					'target' => '#password',
+					'target' => 'password',
 					'msg' => 'Password must be entered.'
 				);
 			}
 			if (!isset($_POST['password2']) || trim($_POST['password2']) === "") {
 				$_->status = -1;
 				$_->error[] = array(
-					'target' => '#password2',
+					'target' => 'password2',
 					'msg' => 'Password must be confirmed.'
 				);
 			}
 			if (!isset($_POST['email']) || trim($_POST['email']) === "") {
 				$_->status = -1;
 				$_->error[] = array(
-					'target' => '#email',
+					'target' => 'email',
 					'msg' => 'E-mail address must be entered.'
 				);
 			}
@@ -44,7 +44,7 @@ class AccountController extends \Theogony\ControllerBase
 			if (trim($_POST['password']) != trim($_POST['password2'])) {
 				$_->status = -2;
 				$_->error[] = array(
-					'target' => '#password2',
+					'target' => 'password2',
 					'msg' => 'Twice password must be the same.'
 				);
 				return;
@@ -58,7 +58,7 @@ class AccountController extends \Theogony\ControllerBase
 					trim($_POST['email']))) {
 				$_->status = -2;
 				$_->error[] = array(
-					'target' => '#email',
+					'target' => 'email',
 					'msg' => 'Email must be valid.'
 				);
 				return;
@@ -80,6 +80,14 @@ class AccountController extends \Theogony\ControllerBase
 				);
 				return;
 			}
+		} // if (isset($_POST['username']))
+		else
+		{
+			$_->status = -1;
+			$_->error[] = array(
+				'target' => '',
+				'msg' => 'Missing parameter.'
+			);
 		}
 	}
 }

@@ -22,6 +22,9 @@ class Mysql
 
 		$this->connection = new \mysqli($this->config->host, $this->config->username, $this->config->password, $this->config->database, 3306);
 		$this->connection->query("SET NAMES `UTF8`");
+
+		// wipe data for security
+		$this->config = null;
 	}
 
 	public function __clone()
