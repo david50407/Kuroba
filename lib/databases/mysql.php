@@ -53,7 +53,7 @@ class Mysql
 		return $rtn;
 	}
 
-	private function __where($condition)
+	private function __where(&$condition)
 	{
 		$parts = array();
 		$type = $condition[0] === ':or' ? ' OR ' : 'AND';
@@ -72,7 +72,7 @@ class Mysql
 		return $rtn;
 	}
 
-	private function __where_func($condition)
+	private function __where_func(&$condition)
 	{
 		$rtn = '';
 		switch ($condition[0])

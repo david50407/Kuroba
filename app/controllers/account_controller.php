@@ -66,9 +66,7 @@ class AccountController extends \Theogony\ControllerBase
 
 			// check if username or email repeats
 			$db = \Theogony\ConfigCore::getInstance()->database;
-			// $res = Account.where(['username' => trim($_POST['username']),
-			// 	':or' => ['email' => trim($_POST['email'])]
-			// ]);
+			// $res = Account.where(...);
 			$res = $db->from("accounts")->where([':or',
 				'username' => $_POST['username'],
 				'email' => $_POST['email']
