@@ -157,8 +157,8 @@ class RoutesCore
 			$temp = new \Theogony\Struct\DataCollection();
 			$temp->option = $option;
 			$controller->_setData($temp);
-			$controller->$option['action']($temp);
 			$controller->_setFormat($option['format']);
+			$controller->$option['action']($temp);
 			$controller->_view($option['action']);
 		}
 	}

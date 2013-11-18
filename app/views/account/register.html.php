@@ -13,23 +13,27 @@
 					<fieldset>
 						<div class="pure-control-group">
 							<label for="username">Username</label>
-							<input id="username" type="text" placeholder="Username">
+							<input id="username" name="username" type="text" placeholder="Username">
+							<span data-notice="username" class="form-notice">!<span class="form-notice-tip"></span></span>
 						</div>	
 						<div class="pure-control-group">
 							<label for="password">Password</label>
-							<input id="password" type="password" placeholder="Password">
+							<input id="password" name="password" type="password" placeholder="Password">
+							<span data-notice="password" class="form-notice">!<span class="form-notice-tip"></span></span>
 						</div>
 						<div class="pure-control-group">
 							<label for="password2"></label>
-							<input id="password2" type="password" placeholder="...again">
+							<input id="password2" name="password2" type="password" placeholder="...again">
+							<span data-notice="password2" class="form-notice">!<span class="form-notice-tip"></span></span>
 						</div>
 						<div class="pure-control-group">
 							<label for="email">Email</label>
-							<input id="email" type="text" placeholder="email">
+							<input id="email" name="email" type="text" placeholder="email">
+							<span data-notice="email" class="form-notice">!<span class="form-notice-tip"></span></span>
 						</div>	
 						<div class="pure-controls">
 							<label for="rule" class="pure-checkbox">
-								<input id="rule" type="checkbox"> I promise that I'm real creature, not a robot.
+								<input id="rule" name="rule" type="checkbox"> I promise that I'm real creature, not a robot.
 							</label>
 							<button type="submit" class="pure-button pure-button-primary ladda-button" data-style="zoom-out">Register</button>
 						</div>

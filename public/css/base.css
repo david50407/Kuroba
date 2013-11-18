@@ -63,3 +63,43 @@ a {
 	bottom: 0;
 	overflow: auto;
 }
+
+/* form */
+.form-notice {
+	position: relative;
+	width: 16px;
+	height: 16px;
+	cursor: default;
+	background: #555;
+	color: #fff;
+	font-size: 14px;
+	line-height: 16px;
+	text-align: center;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	margin-left: .8em;
+	display: none;
+}
+
+.form-notice.show {
+	display: inline-block;
+}
+
+.form-notice-tip {
+	display: none;
+	position: absolute;
+	top: -3em;
+	white-space: nowrap;
+	right: 0;
+	background: #666;
+	padding: .5em 1em;
+	border: 1px solid #444;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.form-notice:hover .form-notice-tip {
+	display: block;
+}
