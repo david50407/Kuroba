@@ -11,6 +11,7 @@
 			<div class="pure-u-1-2">
 				<form class="pure-form pure-form-aligned register-form" action="account/register" method="post" data-pjax>
 					<fieldset>
+						<span class="form-notice-global"></span>
 						<div class="pure-control-group">
 							<label for="username">Username</label>
 							<input id="username" name="username" type="text" placeholder="Username">
@@ -34,6 +35,7 @@
 						<div class="pure-controls">
 							<label for="rule" class="pure-checkbox">
 								<input id="rule" name="rule" type="checkbox"> I promise that I'm real creature, not a robot.
+								<span data-notice="rule" class="form-notice">!<span class="form-notice-tip"></span></span>
 							</label>
 							<button type="submit" class="pure-button pure-button-primary ladda-button" data-style="zoom-out">Register</button>
 						</div>

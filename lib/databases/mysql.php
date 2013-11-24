@@ -39,7 +39,28 @@ class Mysql
 			$rtn = clone $this;
 		else
 			$rtn = $this;
+		
+		if (isset($rtn->command['insert'])) {
+			trigger_error('Already set for `INSERT` query, now will duplicated.', E_USER_WARNING);
+			$rtn = clone $this;
+		}
 		$rtn->command['from'] = $this->connection->real_escape_string($table);
+
+		return $rtn;
+	}
+
+	public function insert($table)
+	{
+		if (!$this->duplicated)
+			$rtn = clone $this;
+		else
+			$rtn = $this;
+
+		if (isset($rtn->command['from'])) {
+			trigger_error('Already set for `SELECT` query, now will duplicated.', E_USER_WARNING);
+			$rtn= clone $this;
+		}
+		$rtn->command['insert'] = $this->connection->real_escape_string($table);
 
 		return $rtn;
 	}
@@ -117,6 +138,21 @@ class Mysql
 		return $rtn;
 	}
 
+	public function value($pairs)
+	{
+		if (!$this->duplicated)
+			$rtn = clone $this;
+		else
+			$rtn = $this;
+
+		if (!isset($this->command['value']))
+			$this->command['value'] = array();
+		foreach ($pairs as $k => $v)
+			$this->command['value'][$this->connection->real_escape_string($k)] = $this->connection->real_escape_string($v);
+
+		return $rtn;
+	}
+
 	public function limit($limit)
 	{
 		if (!$this->duplicated)
@@ -129,26 +165,80 @@ class Mysql
 		return $rtn;
 	}
 
-	public function run()
+	public function asc($order)
 	{
-		if (!isset($this->command['from']))
-			return array();
-		$sql = 'select * from `' . $this->command['from'] . '`';
-
-		if (isset($this->command['where']))
-			$sql .= ' where ' . $this->command['where'];
-
-		if (isset($this->command['limit']))
-			$sql .= ' limit ' . $this->command['limit'];
-
-		$result = $this->connection->query($sql);
-
-		$rtn = array();
-		if ($result)
-			while ($row = $result->fetch_assoc())
-				$rtn[] = $row;
+		if (!$this->duplicated)
+			$rtn = clone $this;
+		else
+			$rtn = $this;
+		
+		if (!isset($rtn->command['order']))
+			$rtn->command['order'] = [];
+		$rtn->command['order'][$this->connection->real_escape_string($order)] = "ASC";
 
 		return $rtn;
+	}
+
+	public function desc($order)
+	{
+		if (!$this->duplicated)
+			$rtn = clone $this;
+		else
+			$rtn = $this;
+		
+		if (!isset($rtn->command['order']))
+			$rtn->command['order'] = [];
+		$rtn->command['order'][$this->connection->real_escape_string($order)] = "DESC";
+
+		return $rtn;
+	}
+
+	public function run()
+	{
+		if (isset($this->command['from']))
+		{
+			$sql = 'SELECT * FROM `' . $this->command['from'] . '`';
+
+			if (isset($this->command['where']))
+				$sql .= ' WHERE ' . $this->command['where'];
+
+			if (isset($this->command['order']))
+				$sql .= ' ORDER BY ' . implode(', ',
+					array_map(function ($k, $v) { return "`" . $k . "` " . $v; }, 
+						array_keys($this->command['order']),
+						array_values($this->command['order'])
+					)
+				);
+
+			if (isset($this->command['limit']))
+				$sql .= ' LIMIT ' . $this->command['limit'];
+
+			$result = $this->connection->query($sql);
+	
+			$rtn = array();
+			if ($result)
+				while ($row = $result->fetch_assoc())
+					$rtn[] = $row;
+	
+			return $rtn;
+		}
+
+		if (isset($this->command['insert']))
+		{
+			$sql = 'INSERT INTO `' . $this->command['insert'] . '`';
+
+			if (!isset($this->command['value']))
+				return array();
+			
+			$sql .= ' (`' . implode('`, `', array_keys($this->command['value'])) . '`)';
+			$sql .= " VALUE ('" . implode("', '", array_values($this->command['value'])) . "')";
+
+			$result = $this->connection->query($sql);
+			
+			if ($result)
+				return array_merge(array('id' => $this->connection->insert_id), $this->command['value']);
+			return array();
+		}
 	}
 }
 ?>

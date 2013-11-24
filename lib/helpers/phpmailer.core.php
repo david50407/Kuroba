@@ -181,14 +181,6 @@ class Core
     public $UseSendmailOptions = true;
 
     /**
-     * Path to PHPMailer plugins.
-     * Useful if the SMTP class is not in the PHP include path.
-     * @type string
-     * @deprecated Should not be needed now there is an autoloader.
-     */
-    public $PluginDir = '';
-
-    /**
      * The email address that a reading confirmation should be sent to.
      * @type string
      */
@@ -571,11 +563,6 @@ class Core
     public function __construct($exceptions = false)
     {
         $this->exceptions = ($exceptions == true);
-        //Make sure our autoloader is loaded
-        if (version_compare(PHP_VERSION, '5.1.2', '>=') and
-            !spl_autoload_functions() || !in_array('PHPMailerAutoload', spl_autoload_functions())) {
-            require 'PHPMailerAutoload.php';
-        }
     }
 
     /**

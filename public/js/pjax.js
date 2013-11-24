@@ -13,7 +13,11 @@ $(function () {
 				xhr.setRequestHeader('X-PJAX', 'true');
 			}
 		})
-		.done(function (data) {
+		.done(function (data, text, jsXHR) {
+			if (jsXHR.getResponseHeader("Pjax-Location")) {
+				History.replaceState(null, null, jsXHR.getResponseHeader("Pjax-Location"));
+				return;
+			}
 			var html = $(data).hide();
 			$("#" + html.attr("id")).remove();
 			$(".container-1, .container-2").stop().hide({

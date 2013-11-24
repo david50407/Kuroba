@@ -4,7 +4,7 @@ $(function (){
 		var self = $(this);
 		var button = $('button[type=submit]', self);
 		button.ladda('start');
-		$(".form-notice[data-notice]", self).removeClass('show');
+		$(".form-notice[data-notice], .form-notice-global", self).removeClass('show');
 		$.ajax({
 			url:  self.attr('action') + '.json',
 			type: self.attr('method') || 'get',
@@ -18,11 +18,14 @@ $(function (){
 			if (data.status == 0) // success
 				History.pushState(null, null, data.referral);
 			if (data.status == -1) { // missing parameter / wrong input
-				console.log(data);
 				$.each(data.error, function (target, msg) {
-					if (target != '#')
-						$(".form-notice[data-notice=" + target + "]", self).addClass('show');
+					if (target == '$') {
+						$(".form-notice-global", self).html(msg);
+						$(".form-notice-global", self).addClass('show');
+					} else {
 						$(".form-notice[data-notice=" + target + "] .form-notice-tip", self).html(msg);
+						$(".form-notice[data-notice=" + target + "]", self).addClass('show');
+					}
 				});
 			}
 		});

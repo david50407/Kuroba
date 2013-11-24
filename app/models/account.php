@@ -13,8 +13,8 @@ class Account extends \Theogony\ModelBase
 
 	private static $salt = "0ef6";
 
-	public function generate_password($pass) {
-		return sha1(md5($pass) . '$salt$' . $salt);
+	public static function generate_password($pass) {
+		return sha1(md5($pass) . '$salt$' . self::$salt);
 	}
 }
 ?>

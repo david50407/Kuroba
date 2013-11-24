@@ -103,3 +103,19 @@ a {
 .form-notice:hover .form-notice-tip {
 	display: block;
 }
+
+.form-notice-global {
+	display: none;
+	margin: -3em 2em .8em 2em;
+	white-space: nowrap;
+	background: rgb(250, 255, 189);
+	padding: .5em 1em;
+	border: 1px solid rgb(223, 223, 113);;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.form-notice-global.show {
+	display: block;
+}
