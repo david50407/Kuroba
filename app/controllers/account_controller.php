@@ -13,10 +13,22 @@ class AccountController extends \Theogony\ControllerBase
 			if (!isset($_POST['username']) || trim($_POST['username']) === "") {
 				$_->status = -1;
 				$_->error['username'] = 'Username must be entered.';
+			} elseif (!preg_match("/^[a-zA-Z]/", trim($_POST['username']))) {
+				$_->status = -1;
+				$_->error['username'] = 'Username must started from alphabets';
+			} elseif (strlen(trim($_POST['username'])) < 5) {
+				$_->status = -1;
+				$_->error['username'] = 'Username must be at least 5 letters';
+			} elseif (!preg_match("/^[a-zA-Z][a-zA-Z0-9_]+$/", trim($_POST['username']))) {
+				$_->status = -1;
+				$_->error['username'] = 'Username must only have alphabets, numbers, and underline (_)';
 			}
 			if (!isset($_POST['password']) || trim($_POST['password']) === "") {
 				$_->status = -1;
 				$_->error['password'] = 'Password must be entered.';
+			} elseif (strlen(trim($_POST['password'])) < 8) {
+				$_->status = -1;
+				$_->error['password'] = 'Password must be at least 8 letters';
 			}
 			if (!isset($_POST['password2']) || trim($_POST['password2']) === "") {
 				$_->status = -1;
@@ -25,6 +37,13 @@ class AccountController extends \Theogony\ControllerBase
 			if (!isset($_POST['email']) || trim($_POST['email']) === "") {
 				$_->status = -1;
 				$_->error['email'] = 'E-mail address must be entered.';
+			} elseif (!preg_match("/^(([\w-]+\.)+[\w-]+|([a-zA-Z]{1}|[\w-]{2,}))" .
+						"@((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\." .
+						"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|" .
+						"([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$/",
+					trim($_POST['email']))) {
+				$_->status = -1;
+				$_->error['email'] = 'Email must be valid.';
 			}
 			if (!isset($_POST['rule'])) {
 				$_->status = -1;
@@ -38,17 +57,6 @@ class AccountController extends \Theogony\ControllerBase
 					$_->error['password2'] = 'Twice password must be the same.';
 				}
 				
-			// check if email is invalid
-			if (!isset($_->error['email']))
-				if (!preg_match("/^(([\w-]+\.)+[\w-]+|([a-zA-Z]{1}|[\w-]{2,}))" .
-							"@((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\." .
-							"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\.([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|" .
-							"([a-zA-Z]+[\w-]+\.)+[a-zA-Z]{2,4})$/",
-						trim($_POST['email']))) {
-					$_->status = -1;
-					$_->error['email'] = 'Email must be valid.';
-				}
-
 			// check if username or email repeats
 			$db = \Theogony\ConfigCore::getInstance()->database;
 			// $res = Account.where(...);
@@ -98,7 +106,7 @@ class AccountController extends \Theogony\ControllerBase
 							'token' => $token,
 							'expire_on' => date('Y-m-d H:i:s', time() + 60 * 60)
 						])->run();
-						$mail = MailHelper::send([$account['email'] => $account['email']],
+						$_->mailed = MailHelper::send([$account['email'] => $account['email']],
 							"[Kurōbā] Confirm your Kurōbā account", 
 <<<__HTML__
 <html>
@@ -115,9 +123,8 @@ class AccountController extends \Theogony\ControllerBase
 </html>
 __HTML__
 						);
-						if ($mail)
-							$jump = false;
 					}
+					$jump = false;
 				}
 			}
 		}
