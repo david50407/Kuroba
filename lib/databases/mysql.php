@@ -40,11 +40,12 @@ class Mysql
 		else
 			$rtn = $this;
 		
-		if (isset($rtn->command['insert'])) {
-			trigger_error('Already set for `INSERT` query, now will duplicated.', E_USER_WARNING);
+		if (isset($rtn->command['type'])) {
+			trigger_error('Already set for `' . $rtn->command['type'] . '` query, now will duplicated.', E_USER_WARNING);
 			$rtn = clone $this;
 		}
-		$rtn->command['from'] = $this->connection->real_escape_string($table);
+		$rtn->command['table'] = $this->connection->real_escape_string($table);
+		$rtn->command['type'] = 'SELECT';
 
 		return $rtn;
 	}
@@ -56,11 +57,29 @@ class Mysql
 		else
 			$rtn = $this;
 
-		if (isset($rtn->command['from'])) {
-			trigger_error('Already set for `SELECT` query, now will duplicated.', E_USER_WARNING);
-			$rtn= clone $this;
+		if (isset($rtn->command['type'])) {
+			trigger_error('Already set for `' . $rtn->command['type'] . '` query, now will duplicated.', E_USER_WARNING);
+			$rtn = clone $this;
 		}
-		$rtn->command['insert'] = $this->connection->real_escape_string($table);
+		$rtn->command['table'] = $this->connection->real_escape_string($table);
+		$rtn->command['type'] = 'INSERT';
+
+		return $rtn;
+	}
+
+	public function update($table)
+	{
+		if (!$this->duplicated)
+			$rtn = clone $this;
+		else
+			$rtn = $this;
+
+		if (isset($rtn->command['type'])) {
+			trigger_error('Already set for `' . $rtn->command['type'] . '` query, now will duplicated.', E_USER_WARNING);
+			$rtn = clone $this;
+		}
+		$rtn->command['table'] = $this->connection->real_escape_string($table);
+		$rtn->command['type'] = 'UPDATE';
 
 		return $rtn;
 	}
@@ -195,10 +214,27 @@ class Mysql
 
 	public function run()
 	{
-		if (isset($this->command['from']))
-		{
-			$sql = 'SELECT * FROM `' . $this->command['from'] . '`';
+		if ($this->command['type'] == 'SELECT')
+			$sql = 'SELECT * FROM `' . $this->command['table'] . '`';
+		elseif ($this->command['type'] == 'INSERT')
+			$sql = 'INSERT INTO `' . $this->command['table'] . '`';
+		elseif ($this->command['type'] == 'UPDATE')
+			$sql = 'UPDATE `' . $this->command['table'] . '`';
 
+		if ($this->command['type'] == 'INSERT' ||
+			$this->command['type'] == 'UPDATE')
+			if (!isset($this->command['value']))
+				return array();
+			else
+				$sql .= ' SET ' . implode(', ',
+					array_map(function ($k, $v) { return '`' . $k . "` = '" . $v . "'"; }, 
+						array_keys($this->command['value']),
+						array_values($this->command['value'])
+					)
+				);
+
+		if ($this->command['type'] == 'SELECT' ||
+			$this->command['type'] == 'UPDATE') {
 			if (isset($this->command['where']))
 				$sql .= ' WHERE ' . $this->command['where'];
 
@@ -212,33 +248,20 @@ class Mysql
 
 			if (isset($this->command['limit']))
 				$sql .= ' LIMIT ' . $this->command['limit'];
+		}
 
-			$result = $this->connection->query($sql);
-	
-			$rtn = array();
-			if ($result)
+		$result = $this->connection->query($sql);
+
+		$rtn = array();
+		if ($result)
+			if ($this->command['type'] == 'SELECT')
 				while ($row = $result->fetch_assoc())
 					$rtn[] = $row;
-	
-			return $rtn;
-		}
-
-		if (isset($this->command['insert']))
-		{
-			$sql = 'INSERT INTO `' . $this->command['insert'] . '`';
-
-			if (!isset($this->command['value']))
-				return array();
-			
-			$sql .= ' (`' . implode('`, `', array_keys($this->command['value'])) . '`)';
-			$sql .= " VALUE ('" . implode("', '", array_values($this->command['value'])) . "')";
-
-			$result = $this->connection->query($sql);
-			
-			if ($result)
+			elseif ($this->command['type'] == 'INSERT')
 				return array_merge(array('id' => $this->connection->insert_id), $this->command['value']);
-			return array();
-		}
+			elseif ($this->command['type'] == 'UPDATE')
+				return true;
+		return $rtn;
 	}
 }
 ?>

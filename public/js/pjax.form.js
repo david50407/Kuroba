@@ -13,10 +13,31 @@ $(function (){
 			beforeSend: function (xhr) {
 				xhr.setRequestHeader('X-PJAX', 'true');
 			}
-		}).done(function (data) {
+		}).done(function (data, text, jsXHR) {
 			button.ladda('stop');
-			if (data.status == 0) // success
+			if (data.status == 0) { // success
+				if (jsXHR.getResponseHeader("Pjax-Session-Changed") == "true") {
+					$.ajax({
+						url: $BASE + "account/status",
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader('X-PJAX', 'true');
+						}
+					}).done(function (data) {
+						var html = $(data);
+						$('#' + html.attr('id')).replaceWith(html);
+					})
+					$.ajax({
+						url: $BASE + "board/list",
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader('X-PJAX', 'true');
+						}
+					}).done(function (data) {
+						var html = $(data);
+						$('#' + html.attr('id')).replaceWith(html);
+					})
+				}
 				History.pushState(null, null, data.referral);
+			}
 			if (data.status == -1) { // missing parameter / wrong input
 				$.each(data.error, function (target, msg) {
 					if (target == '$') {

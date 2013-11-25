@@ -3,13 +3,57 @@ class AccountController extends \Theogony\ControllerBase
 {
 	public function index(&$_) {}
 
-	public function login(&$_) {}
-	public function register(&$_) {
+	public function login(&$_) {
+		$config = \Theogony\ConfigCore::getInstance();
+		if (SessionHelper::getUser()) { // logined
+			if (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true')
+				header('Pjax-Location: ' . $config->site->baseurl);
+			else
+				header('Location: ' . $config->site->baseurl);
+			@exit();
+		}
 		// registing: POST
 		$_->status = 0;
 		$_->error = array();
 		if ($_SERVER['REQUEST_METHOD'] == "POST") {
-			// check if empty
+			if (!isset($_POST['username']) || trim($_POST['username']) === "") {
+				$_->status = -1;
+				$_->error['username'] = 'Username must be entered.';
+			}
+			if (!isset($_POST['password']) ||      $_POST['password']  === "") {
+				$_->status = -1;
+				$_->error['password'] = 'Password must be entered.';
+			}
+			if ($_->status != 0) return;
+
+			$db = \Theogony\ConfigCore::getInstance()->database;
+			$res = $db->from("accounts")->where([
+				'username' => trim($_POST['username'])
+			])->limit(1)->run();
+
+			if (count($res) == 0 || $res[0]['password'] != Account::generate_password($_POST['password'])) {
+				$_->status = -1;
+				$_->error['$'] = 'Username and password are not matched, or you may <a href=\"account/login\" data-pjax=\"login\">forgot password</a>.';
+			}	
+			if ($_->status != 0) return;
+
+			SessionHelper::loginUser($res[0]);
+			$_->referral = '.';
+		}
+	}
+	public function register(&$_) {
+		$config = \Theogony\ConfigCore::getInstance();
+		if (SessionHelper::getUser()) { // logined
+			if (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true')
+				header('Pjax-Location: account/login');
+			else
+				header('Location: ' . $config->site->baseurl . 'account/login');
+			@exit();
+		}
+		// registing: POST
+		$_->status = 0;
+		$_->error = array();
+		if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			if (!isset($_POST['username']) || trim($_POST['username']) === "") {
 				$_->status = -1;
 				$_->error['username'] = 'Username must be entered.';
@@ -23,14 +67,14 @@ class AccountController extends \Theogony\ControllerBase
 				$_->status = -1;
 				$_->error['username'] = 'Username must only have alphabets, numbers, and underline (_)';
 			}
-			if (!isset($_POST['password']) || trim($_POST['password']) === "") {
+			if (!isset($_POST['password']) || $_POST['password'] === "") {
 				$_->status = -1;
 				$_->error['password'] = 'Password must be entered.';
-			} elseif (strlen(trim($_POST['password'])) < 8) {
+			} elseif (strlen($_POST['password']) < 8) {
 				$_->status = -1;
 				$_->error['password'] = 'Password must be at least 8 letters';
 			}
-			if (!isset($_POST['password2']) || trim($_POST['password2']) === "") {
+			if (!isset($_POST['password2']) || $_POST['password2'] === "") {
 				$_->status = -1;
 				$_->error['password2'] = 'Password must be confirmed.';
 			}
@@ -52,7 +96,7 @@ class AccountController extends \Theogony\ControllerBase
 
 			// check if password not confirmed
 			if (!isset($_->error['password']) and !isset($_->error['password2']))
-				if (trim($_POST['password']) != trim($_POST['password2'])) {
+				if ($_POST['password'] !== $_POST['password2']) {
 					$_->status = -1;
 					$_->error['password2'] = 'Twice password must be the same.';
 				}
@@ -79,60 +123,95 @@ class AccountController extends \Theogony\ControllerBase
 				'email' => $_POST['email']
 			])->run();
 
-			$_SESSION['user_id'] = $res['id'];
+			SessionHelper::loginUser($res['id']);
 			$_->referral = 'account/active';
 
 		} // if (isset($_POST['username']))
 	}
 	public function active(&$_) {
-		$jump = true;
 		$config = \Theogony\ConfigCore::getInstance();
-		if (isset($_SESSION['user_id'])) {
-			$db = \Theogony\ConfigCore::getInstance()->database;
-			$account = $db->from("accounts")->where([
-				'id' => $_SESSION['user_id']
-			])->run();
-			if (count($account) > 0) {
-				$account = $account[0];
-				if ($account['perm'] == 0) { // user_or_above
-					$ticket = $db->from("tickets")->where([
-						'account_id' => $_SESSION['user_id']
-					])->limit(1)->desc('id')->run();
+		$db = $config->database;
+		$_->status = 0;
+		$_->error = [];
+		if (SessionHelper::getUser()) { // logined
+			$account = SessionHelper::getUser();
+			if ($account['perm'] == 0) {
+				$_->jump = preg_replace("/^[^@]+@(mail\.)?/", "mail.", $account['email']);
+				if ($_->jump == "mail.gmail.com")
+					$_->jump = "gmail.com";
+				$ticket = $db->from("tickets")->where([
+					'account_id' => $_SESSION['user_id']
+				])->limit(1)->desc('id')->run();
 
-					if (count($ticket) == 0 || strtotime($ticket[0]['expire_on']) - time() < 0) { // send a new one
-						$token = sha1($account['username'] . '$' . md5(time()));
-						$ticket = $db->insert('tickets')->value([
-							'account_id' => $_SESSION['user_id'],
-							'token' => $token,
-							'expire_on' => date('Y-m-d H:i:s', time() + 60 * 60)
-						])->run();
-						$_->mailed = MailHelper::send([$account['email'] => $account['email']],
-							"[Kurōbā] Confirm your Kurōbā account", 
-<<<__HTML__
-<html>
-	<body>
-		<div style='font-family: "LucidaGrande" , "Lucida Sans Unicode", "Lucida Sans", Verdana, Tahoma, sans-serif; margin: 0; padding: 30px 20px; font-size: 13px; line-height: 1; color: #000; background-color: #eee;'>
-			<p style='font-weight: bold;'>Hi there!</p>
-			<p>We have received a request to active your account <strong>{$account['username']}</strong>. Confirm that you wish to active this account by clicking the link below (or paste it into your browser if that doesn't work). This step is to ensure that your identity is not stolen by others.</p>
-			<p><a href='{$config->site->baseurl}account/active/{$token}'>{$config->site->baseurl}account/active/{$token}</a></p>
-			<p>If you did not make this request yourself, just ignore this message.</p>
-			<p>Have a nice day,<br />Kurōbā.</p>
-			<p>This e-mail was sent by a user triggered event and thus can't really be unsubscribed from.<br />If you keep getting these message and don't want to, please contact <a href='mailto:kuroba@davy.tw'>customer support</a>.</p>
-		</div>
-	</body>
-</html>
-__HTML__
-						);
+				if (isset($_->option['id'])) { // activation
+					if (count($ticket) == 0 || $ticket[0]['token'] != $_->option['id']) {
+						$_->status = -1; // token not matched
+						$_->error['$'] = "Invalid request. Maybe this is not your account?";
+						return;
 					}
-					$jump = false;
+					$_->updated = $db->update('accounts')->value([
+						'perm' => 1 // user
+					])->where([
+						'id' => $_SESSION['user_id']
+					])->run();
+					$_->status = 1;
+					$_->info = "Activated! Enjoy your {$config->site->title} life.";
+				} elseif (count($ticket) == 0 || strtotime($ticket[0]['expire_on']) - time() < 0) { // send a new one
+					$token = sha1($account['username'] . '$' . md5(time()));
+					$ticket = $db->insert('tickets')->value([
+						'account_id' => $_SESSION['user_id'],
+						'token' => $token,
+						'expire_on' => date('Y-m-d H:i:s', time() + 60 * 60)
+					])->run();
+					MailHelper::sendActivation($account['username'], $account['email'], $token);
+					$_->status = -1;
+					$_->error['$'] = "We just sent you a activation requset.";
 				}
+				return;
+			}
+			$_->status = 1;
+			return;
+		} else {
+			if (isset($_->option['id'])) { // activation
+				$ticket = $db->from("tickets")->where([
+					'id' => $_->option['id']
+				])->limit(1)->run();
+
+				if (count($ticket) == 0) {
+					$_->status = -1; // token not matched
+					$_->error['$'] = "Invalid request.";
+					return;
+				}
+				$_->updated = $db->update('accounts')->value([
+					'perm' => 1 // user
+				])->where([
+					'id' => $_SESSION['user_id']
+				])->run();
+				$_->status = 1;
+				return;
 			}
 		}
-		if ($jump) {
-			if (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true')
-				header('Pjax-Location: account/login');
-			else
-				header('Location: ' . $config->site->baseurl . 'account/login');
+		if (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true')
+			header('Pjax-Location: account/login');
+		else
+			header('Location: ' . $config->site->baseurl . 'account/login');
+		@exit();
+	}
+
+	public function logout()
+	{
+		SessionHelper::logoutUser();
+		if (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true')
+			header('Pjax-Location: account/login');
+		else
+			header('Location: ' . \Theogony\ConfigCore::getInstance()->site->baseurl . 'account/login');
+		@exit();
+	}
+
+	public function status()
+	{
+		if (!isset($_SERVER['HTTP_X_PJAX']) || $_SERVER['HTTP_X_PJAX'] !== 'true') {
+			header('Location: ' . \Theogony\ConfigCore::getInstance()->site->baseurl);
 			@exit();
 		}
 	}

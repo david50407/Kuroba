@@ -12,26 +12,44 @@ $(function () {
 			beforeSend: function (xhr) {
 				xhr.setRequestHeader('X-PJAX', 'true');
 			}
-		})
-		.done(function (data, text, jsXHR) {
+		}).done(function (data, text, jsXHR) {
+			if (jsXHR.getResponseHeader("Pjax-Session-Changed") == "true") {
+				$.ajax({
+					url: $BASE + "account/status",
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader('X-PJAX', 'true');
+					}
+				}).done(function (data) {
+					var html = $(data);
+					$('#' + html.attr('id')).replaceWith(html);
+				})
+				$.ajax({
+					url: $BASE + "board/list",
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader('X-PJAX', 'true');
+					}
+				}).done(function (data) {
+					var html = $(data);
+					$('#' + html.attr('id')).replaceWith(html);
+				})
+			}
 			if (jsXHR.getResponseHeader("Pjax-Location")) {
 				History.replaceState(null, null, jsXHR.getResponseHeader("Pjax-Location"));
 				return;
 			}
+
 			var html = $(data).hide();
 			$("#" + html.attr("id")).remove();
 			$(".container-1, .container-2").stop().hide({
 				effect: 'fade',
 				easing: 'easeInExpo',
 				duration: 200,
-				complete: function() {
-					$("#main").append(html);
-					html.show({
-						effect: 'fade',
-						easing: 'easeOutExpo',
-						duration: 200
-					});
-				}
+			});
+			$("#main").append(html);
+			html.show({
+				effect: 'fade',
+				easing: 'easeOutExpo',
+				duration: 200
 			});
 		});
 	});

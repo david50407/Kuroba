@@ -1,5 +1,6 @@
 #container-login,
-#container-register {
+#container-register,
+#container-active {
 	background-color: #eee;
 	position: fixed;
 	top: 0;
@@ -9,13 +10,19 @@
 }
 
 .login-slogan,
-.register-slogan {
+.register-slogan,
+.active-slogan {
 	text-align: right;
 	border-right: 1px rgb(84, 91, 114) solid;
 	padding-right: 1em;
 }
 
+.active-jump {
+	text-align: center;
+}
+
 .login-container,
-.register-container {
+.register-container,
+.active-container {
 	margin: 9em .5em 0;
 }
