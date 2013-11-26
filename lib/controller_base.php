@@ -6,13 +6,14 @@ class ControllerBase
 	protected $settings;
 	protected $format = 'html';
 	protected $data;
+	protected $mixinGlobalLayout = false;
 	public function __construct()
 	{
 		$this->cache = new \Theogony\Struct\DataCollection();
 		$this->settings = new \Theogony\Struct\DataCollection();
 
 		$this->cache->controller = strtolower(preg_replace('/Controller$/', '', get_called_class()));
-		$this->cache->usedLayout = true;
+		$this->cache->layouts = [];
 	}
 
 	public function _setData(&$collection)
@@ -25,6 +26,28 @@ class ControllerBase
 		$this->format = $format;
 	}
 
+	public function _mixinGlobalLayout()
+	{
+		$this->mixinGlobalLayout = true;
+	}
+
+	private function __layout_global()
+	{
+		return dirname(__FILE__) . '/../app/views/layouts/application.' . $this->format . '.php';
+	}
+	private function __layout_controller()
+	{
+		if ($this->settings->layout)
+			$layout = $this->settings->layout;
+		else
+			$layout = $this->cache->controller;
+		return dirname(__FILE__) . '/../app/views/layouts/' . $layout . '.' . $this->format . '.php';
+	}
+	private function __layout($action)
+	{
+		return dirname(__FILE__) . '/../app/views/' . $this->cache->controller . '/' . $action . '.' . $this->format . '.php';
+	}
+
 	public function _view($action)
 	{
 		$_ = &$this->data; # sugar
@@ -34,25 +57,26 @@ class ControllerBase
 		$pjax = isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true';
 		if (isset($this->settings->layout) and !$pjax)
 		{
-			if (!@file_exists($layout_path . $this->settings->layout . '.' . $this->format . '.php'))
+			if (!@file_exists($this->__layout_controller()))
 				throw new \Theogony\Exceptions\NoAvailableLayoutException('layouts/' . $this->settings->layout . '.' . $this->format);
-			include $layout_path . $this->settings->layout . '.' . $this->format . '.php';
+			$this->cache->layouts[] = $this->__layout_controller();
 		}
 		else
 		{
-			if (@file_exists($layout_path . $this->cache->controller . '.' . $this->format . '.php') and !$pjax)
-				include $layout_path . $this->cache->controller . '.' . $this->format . '.php';
-			else if (@file_exists($layout_path . 'application.' . $this->format . '.php') and !$pjax)
-				include $layout_path . 'application.' . $this->format . '.php';
-			else
-			{
-				$path = dirname(__FILE__) . '/../app/views/' . $this->cache->controller . '/';
-				$this->cache->usedLayout = false;
-				if (!@file_exists($path . $action . '.' . $this->format . '.php'))
-					throw new \Theogony\Exceptions\NoAvailableLayoutException($this->cache->controller . '/' . $action . '.' . $this->format);
-				include $path . $action . '.' . $this->format . '.php';
+			if (!$pjax) {
+				if (@file_exists($this->__layout_global()))
+					$this->cache->layouts[] = $this->__layout_global();
+				if (@file_exists($this->__layout_controller()))
+					$this->cache->layouts[] = $this->__layout_controller();
+				if (count($this->cache->layouts) == 2 && !$this->mixinGlobalLayout)
+					array_shift($this->cache->layouts);
 			}
 		}
+
+		if (!@file_exists($this->__layout($action)) && count($this->cache->layouts) == 0)
+			throw new \Theogony\Exceptions\NoAvailableLayoutException($this->cache->controller . '/' . $action . '.' . $this->format);
+			$this->cache->layouts[] = $this->__layout($action);
+		include array_shift($this->cache->layouts);
 	}
 	public function import($file)
 	{
@@ -70,16 +94,12 @@ class ControllerBase
 	}
 	public function mixin()
 	{
-		if (!$this->cache->usedLayout) return;
+		if (count($this->cache->layouts) == 0) return;
 
 		$_ = &$this->data; # sugar
 		$config = \Theogony\ConfigCore::getInstance();
 
-		$path = dirname(__FILE__) . '/../app/views/' . $this->cache->controller . '/';
-		$this->cache->usedLayout = false;
-		if (!@file_exists($path . $this->cache->action . '.' . $this->format . '.php'))
-			throw new \Theogony\Exceptions\NoAvailableLayoutException($this->cache->controller . '/' . $this->cache->action . '.' . $this->format);
-		include $path . $this->cache->action . '.' . $this->format . '.php';
+		include array_shift($this->cache->layouts);
 	}
 }
 

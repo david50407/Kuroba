@@ -53,6 +53,10 @@
 	padding: 1em 2em 0;
 }
 
+.msg-detail-none {
+	padding: 120px 5em 0;
+}
+
 .msg-detail-header-content {
 	margin-left: -80px;
 }

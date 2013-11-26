@@ -1,4 +1,4 @@
-<div id="container-msg-general" class="pure-g-r container-2">
+<div id="container-msg-demo" class="pure-g-r container-2">
 	<div class="pure-u-1 container-list">
 		<div class="pure-g msg-item msg-item-post" data-msg="new">
 			<div class="pure-u"><img src="http://placehold.it/64.png" alt="" class="avatar" /></div>

@@ -37,19 +37,23 @@ $(function () {
 				History.replaceState(null, null, jsXHR.getResponseHeader("Pjax-Location"));
 				return;
 			}
+			var container = $('#' + (jsXHR.getResponseHeader("Pjax-Container") || "main"));
 
-			var html = $(data).hide();
-			$("#" + html.attr("id")).remove();
-			$(".container-1, .container-2").stop().hide({
+			var html = $(data);
+			container.stop().hide({
 				effect: 'fade',
 				easing: 'easeInExpo',
 				duration: 200,
-			});
-			$("#main").append(html);
-			html.show({
-				effect: 'fade',
-				easing: 'easeOutExpo',
-				duration: 200
+				complete: function () {
+					container.children().hide();
+					$("#" + html.attr("id"), container).remove();
+					container.append(html);
+					container.show({
+						effect: 'fade',
+						easing: 'easeOutExpo',
+						duration: 200
+					});
+				}
 			});
 		});
 	});

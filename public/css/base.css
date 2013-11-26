@@ -63,6 +63,10 @@ a {
 	bottom: 0;
 	overflow: auto;
 }
+.container-2 .container-list a {
+	color: inherit;
+	cursor: default;
+}
 
 /* form */
 .form-notice {

@@ -194,6 +194,18 @@ class Mysql
 		return $rtn;
 	}
 
+	public function offset($offset)
+	{
+		if (!$this->duplicated)
+			$rtn = clone $this;
+		else
+			$rtn = $this;
+
+		$rtn->command['offset'] = intval($offset);
+
+		return $rtn;
+	}
+
 	public function asc($order)
 	{
 		if (!$this->duplicated)
@@ -258,6 +270,8 @@ class Mysql
 
 			if (isset($this->command['limit']))
 				$sql .= ' LIMIT ' . $this->command['limit'];
+			if (isset($this->command['offset']) && $this->command['offset'] > 0)
+				$sql .= ' OFFSET ' . $this->command['offset'];
 		}
 
 		$result = $this->connection->query($sql);
