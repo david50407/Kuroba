@@ -4,6 +4,7 @@ $(function () {
 		var self = $(this);
 		self.removeClass(self.attr('data-twice').split('|')[0]);
 		self.addClass(self.attr('data-twice').split('|')[1]);
+		self.addClass('button-twice');
 		self.removeAttr('data-twice');
 		self.attr('data-pjax', 'true');
 	});

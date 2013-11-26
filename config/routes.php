@@ -28,6 +28,8 @@ Theogony\RoutesCore::draw(function($router) {
 	$router->match(array('board-(:board)/message-(:msg)/edit(.:format)' => 'message#edit'));
 	$router->match(array('board-(:board)/message-(:msg)/delete' => 'message#delete_'));
 	$router->match(array('board-(:board)/message-(:msg)/reply(.:format)' => 'message#reply'));
+	$router->match(array('board-(:board)/message-(:msg)/reply-(:reply)/delete(.:format)' => 'message#reply_del'));
+	$router->match(array('board-(:board)/message-(:msg)/reply-(:reply)/edit(.:format)' => 'message#reply_edit'));
 	$router->match(array('board-(:board)/message-(:msg)(/page-:page)(.:format)' => 'message#index'));
 });
 ?>
