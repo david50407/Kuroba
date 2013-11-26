@@ -18,7 +18,7 @@
 <?php endif; ?>
 						<div class="pure-control-group">
 							<label for="name">Username</label>
-							<input name="username" type="text" placeholder="Username">
+							<input name="username" type="text" placeholder="Username" value="<?= $_POST['username'] ?>">
 <?php if (isset($_->error['username'])): ?>
 							<span data-notice="username" class="form-notice show">!<span class="form-notice-tip"><?= $_->error['username'] ?></span></span>
 <?php else: ?>

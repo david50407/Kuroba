@@ -18,7 +18,7 @@
 <?php endif; ?>
 						<div class="pure-control-group">
 							<label for="username">Username</label>
-							<input id="username" name="username" type="text" placeholder="Username">
+							<input id="username" name="username" type="text" placeholder="Username" value="<?= $_POST["username"] ?>">
 <?php if (isset($_->error['username'])): ?>
 							<span data-notice="username" class="form-notice show">!<span class="form-notice-tip"><?= $_->error['username'] ?></span></span>
 <?php else: ?>
@@ -45,7 +45,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label for="email">Email</label>
-							<input id="email" name="email" type="text" placeholder="email">
+							<input id="email" name="email" type="text" placeholder="email" value="<?= $_POST["email"] ?>">
 <?php if (isset($_->error['email'])): ?>
 							<span data-notice="email" class="form-notice show">!<span class="form-notice-tip"><?= $_->error['email'] ?></span></span>
 <?php else: ?>

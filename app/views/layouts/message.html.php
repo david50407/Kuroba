@@ -6,7 +6,7 @@
 ?>
 <div id="container-msg-<?= $_->name ?>" class="pure-g-r container-2">
 	<div class="pure-u-1 container-list">
-<?php if (SessionHelper::getPrem() > 0): ?>
+<?php if (SessionHelper::getPerm() > 0): ?>
 		<a href="board-<?= $_->name ?>/message-new" data-pjax>
 			<div class="pure-g msg-item msg-item-post" data-msg="new">
 				<div class="pure-u"><img src="http://placehold.it/64.png" alt="" class="avatar" /></div>

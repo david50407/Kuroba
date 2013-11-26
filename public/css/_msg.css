@@ -84,3 +84,12 @@
 	margin-left: 72px;
 }
 
+.msg-form input {
+	font-size: 90%;
+}
+
+.msg-form textarea {
+	font-size: 100%;
+	width: 100%;
+	min-height: 5em;
+}

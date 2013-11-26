@@ -51,7 +51,10 @@ $(function () {
 					container.show({
 						effect: 'fade',
 						easing: 'easeOutExpo',
-						duration: 200
+						duration: 200,
+						complete: function () {
+							$(window).trigger('resize');
+						}
 					});
 				}
 			});

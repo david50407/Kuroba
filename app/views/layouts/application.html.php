@@ -23,6 +23,7 @@
 	<script defer src="js/jquery.history.js"></script>
 	<script defer src="js/pjax.js"></script>
 	<script defer src="js/pjax.form.js"></script>
+	<script defer src="js/autosize.js"></script>
 	<script defer src="js/hogan.js"></script>
 	<script defer src="js/ladda.spin.js"></script>
 	<script defer src="js/ladda.js"></script>

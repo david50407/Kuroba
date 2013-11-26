@@ -7,6 +7,7 @@ class ControllerBase
 	protected $format = 'html';
 	protected $data;
 	protected $mixinGlobalLayout = false;
+	protected $forceLayout = false;
 	public function __construct()
 	{
 		$this->cache = new \Theogony\Struct\DataCollection();
@@ -19,16 +20,24 @@ class ControllerBase
 	public function _setData(&$collection)
 	{
 		$this->data = &$collection;
+		return $this;
 	}
 
 	public function _setFormat($format)
 	{
 		$this->format = $format;
+		return $this;
 	}
 
-	public function _mixinGlobalLayout()
+	public function _mixinGlobalLayout($i = true)
 	{
-		$this->mixinGlobalLayout = true;
+		$this->mixinGlobalLayout = $i;
+		return $this;
+	}
+	public function _forceLayout($i = true)
+	{
+		$this->forceLayout = $i;
+		return $this;
 	}
 
 	private function __layout_global()
@@ -63,7 +72,7 @@ class ControllerBase
 		}
 		else
 		{
-			if (!$pjax) {
+			if ($this->forceLayout || !$pjax) {
 				if (@file_exists($this->__layout_global()))
 					$this->cache->layouts[] = $this->__layout_global();
 				if (@file_exists($this->__layout_controller()))

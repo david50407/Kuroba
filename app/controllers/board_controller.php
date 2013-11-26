@@ -12,7 +12,7 @@ class BoardController extends \Theogony\ControllerBase
 		$board = $db->from('boards')->where([
 			'tiny' => $_->name
 		])->limit(1)->run();
-		if (count($board) == 0) {
+		if (count($board) == 0 || SessionHelper::getPerm() < $board[0]['perm']) {
 			if (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true')
 				header('Pjax-Location: .');
 			else

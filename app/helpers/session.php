@@ -37,7 +37,7 @@ class SessionHelper {
 		return self::$account;
 	}
 
-	static public function getPrem()
+	static public function getPerm()
 	{
 		return self::getUser() ? self::getUser()['perm'] : 0;
 	}

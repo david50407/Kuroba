@@ -38,7 +38,12 @@ class AccountController extends \Theogony\ControllerBase
 			if ($_->status != 0) return;
 
 			SessionHelper::loginUser($res[0]);
-			$_->referral = '.';
+			if (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true')
+				$_->referral = '.';
+			else {
+				header('Location: ' . $config->site->baseurl);
+				@exit();
+			}
 		}
 	}
 	public function register(&$_) {
@@ -124,7 +129,12 @@ class AccountController extends \Theogony\ControllerBase
 			])->run();
 
 			SessionHelper::loginUser($res['id']);
-			$_->referral = 'account/active';
+			if (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true')
+				$_->referral = 'account/active';
+			else {
+				header('Location: ' . $config->site->baseurl . 'account/active');
+				@exit();
+			}
 
 		} // if (isset($_POST['username']))
 	}
