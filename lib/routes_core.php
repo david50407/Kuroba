@@ -58,13 +58,13 @@ class RoutesCore
 
 		if ($controller_override != null)
 		{
-			$controller_override = explode($controller_override, '#');
+			$controller_override = explode('#', $controller_override);
 			if (count($controller_override) == 2) # controller#action
 			{
 				if ($controller_override[0] != '' && !isset($obj['params']['controller'])) # has pointed a controller
 					$obj['params']['controller'] = $controller_override[0];
 				if (!isset($obj['params']['action']))
-					$obj['params']['aciton'] = $controller_override[1];
+					$obj['params']['action'] = $controller_override[1];
 			}
 			else if (!isset($obj['params']['controller']))
 				$obj['params']['controller'] = $controller_override;
@@ -72,6 +72,7 @@ class RoutesCore
 
 		// make str to regexp
 		$str = preg_replace('/\)/', ')?', $obj['str']);
+		$str = preg_replace('/\./', '\.', $str);
 		$str = preg_replace('/:(\w+)/', '(?P<${1}>\w+)', $str);
 		$obj['regex'] = '#^' . $str . '$#';
 

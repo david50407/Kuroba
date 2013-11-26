@@ -135,11 +135,21 @@ class Mysql
 			// case ':%':
 			// case ':like':
 
-			// case ':>':
-			// case ':<':
-			// case ':<=':
-			// case ':>=':
-			// case ':=':
+			case ':>':
+				$rtn = '> ' . $this->connection->real_escape_string($condition[1]);
+				break;
+			case ':<':
+				$rtn = '< ' . $this->connection->real_escape_string($condition[1]);
+				break;
+			case ':<=':
+				$rtn = '<= ' . $this->connection->real_escape_string($condition[1]);
+				break;
+			case ':>=':
+				$rtn = '>= ' . $this->connection->real_escape_string($condition[1]);
+				break;
+			case ':=':
+				$rtn = '= ' . $this->connection->real_escape_string($condition[1]);
+				break;
 
 			// case ':~':
 			// case ':between':

@@ -24,7 +24,7 @@ $(function () {
 					$('#' + html.attr('id')).replaceWith(html);
 				})
 				$.ajax({
-					url: $BASE + "board/list",
+					url: $BASE + "board/sidebar",
 					beforeSend: function (xhr) {
 						xhr.setRequestHeader('X-PJAX', 'true');
 					}

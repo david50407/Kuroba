@@ -24,5 +24,6 @@ Theogony\RoutesCore::draw(function($router) {
   # $rouner->match(':controller(/:action(/:id))(.:format)');
 	// $router->match('');
 	$router->match(':controller(/:action(/:id))(.:format)');
+	$router->match(array('board-(:board)(/page-:page)(.:format)' => 'board#page'));
 });
 ?>
