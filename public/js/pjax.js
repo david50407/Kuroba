@@ -1,12 +1,33 @@
 $(function () {
+	$(document).on('click', 'a[data-twice]', function(event) {
+		event.preventDefault();
+		var self = $(this);
+		self.removeClass(self.attr('data-twice').split('|')[0]);
+		self.addClass(self.attr('data-twice').split('|')[1]);
+		self.removeAttr('data-twice');
+		self.attr('data-pjax', 'true');
+	});
+
 	$(document).on('click', 'a[data-pjax]', function(event) {
 		event.preventDefault();
 		var self = $(this);
 		History.pushState(null, null, self.attr('href'));
 	});
 
+	var boardRegex = /board-(\w+)/;
+	var messageRegex = /message-(\w+)/;
 	History.Adapter.bind(window, 'statechange', function() {
 		var state = History.getState();
+		var board = boardRegex.exec(state.url);
+		if (board) {
+			$('#nav .pure-menu-selected').removeClass('pure-menu-selected');
+			$('#nav li[data-board=' + board[1] + ']').addClass('pure-menu-selected');
+			var message = messageRegex.exec(state.url);
+			if (message) {
+				$('.msg-item.msg-item-selected').removeClass('msg-item-selected');
+				$('.msg-item[data-message=' + message[1] + ']').addClass('msg-item-selected');
+			}
+		}
 		$.ajax({
 			url: state.url + "?_seed=" + Math.random(),
 			beforeSend: function (xhr) {
@@ -54,6 +75,7 @@ $(function () {
 						duration: 200,
 						complete: function () {
 							$(window).trigger('resize');
+							$('input, textarea', html).first().trigger('focus');
 						}
 					});
 				}

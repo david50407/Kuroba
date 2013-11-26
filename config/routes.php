@@ -17,15 +17,17 @@ Theogony\RoutesCore::draw(function($router) {
 	# You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   # $router->root = 'welcome#index';
-	$router->root = 'homepage#index';
+	$router->root = 'board#index';
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   # $rouner->match(':controller(/:action(/:id))(.:format)');
-	// $router->match('');
 	$router->match(':controller(/:action(/:id))(.:format)');
 	$router->match(array('board-(:board)(/page-:page)(.:format)' => 'board#index'));
 	$router->match(array('board-(:board)/message-new(.:format)' => 'message#new_'));
+	$router->match(array('board-(:board)/message-(:msg)/edit(.:format)' => 'message#edit'));
+	$router->match(array('board-(:board)/message-(:msg)/delete' => 'message#delete_'));
+	$router->match(array('board-(:board)/message-(:msg)/reply(.:format)' => 'message#reply'));
 	$router->match(array('board-(:board)/message-(:msg)(/page-:page)(.:format)' => 'message#index'));
 });
 ?>

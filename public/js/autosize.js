@@ -5,4 +5,5 @@ $(function () {
 		});
 	});
 	$(window).trigger('resize');
+	$('input, textarea').first().trigger('focus');
 });

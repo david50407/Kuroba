@@ -7,7 +7,7 @@ class BoardController extends \Theogony\ControllerBase
 	{
 		$config = \Theogony\ConfigCore::getInstance();
 		$db = $config->database;
-		$_->name = $_->option['board'];
+		$_->name = $_->option['board'] ? $_->option['board'] : 'general';
 		$_->page = $_->option['page'] ? $_->option['page'] : 0;
 		$board = $db->from('boards')->where([
 			'tiny' => $_->name
@@ -21,8 +21,9 @@ class BoardController extends \Theogony\ControllerBase
 		}
 
 		$_->threads = $db->from('threads')->where([
-			'board_id' => $board[0]['id']
-		])->asc('id')->limit(20)->offset(20 * $_->page)->run();
+			'board_id' => $board[0]['id'],
+			'deleted'  => '0'
+		])->desc('id')->limit(20)->offset(20 * $_->page)->run();
 	}
 }
 ?>

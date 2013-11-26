@@ -2,6 +2,9 @@
 	padding: 0.9em 1em;
 	border-bottom: 1px solid #ddd;
 	border-left: 6px solid transparent;
+	max-height: 24em;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .msg-author {
@@ -37,6 +40,12 @@
 	border-right: 0;
 }
 
+.msg-reply {
+	max-height: 8em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .msg-detail-control {
 	border-bottom: 1px solid #ddd;
 	padding: .5em 2em;
@@ -63,6 +72,7 @@
 
 .msg-detail-title {
 	margin: 5px 0;
+	vertical-align: inherit;
 }
 
 .msg-detail-subtitle {
@@ -92,4 +102,5 @@
 	font-size: 100%;
 	width: 100%;
 	min-height: 5em;
+	margin-bottom: 1em;
 }

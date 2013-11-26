@@ -4,7 +4,9 @@
 <?php $db = \Theogony\ConfigCore::getInstance()->database; ?>
 <?php $boards = $db->from('boards')->where(['perm' => [':<=', $perm]])->asc('id')->run(); ?>
 <?php foreach ($boards as $board): ?>
-		<li <?php if ($_->option['board'] == $board['tiny']): ?>class="pure-menu-selected"<?php endif; ?>><a href="board-<?= $board['tiny']?>" data-pjax><?= $board['name'] ?></a></li>
+		<li data-board="<?= $board["tiny"]?>" <?php if ($_->option['board'] == $board['tiny']): ?>class="pure-menu-selected"<?php endif; ?>>
+			<a href="board-<?= $board['tiny']?>" data-pjax><?= $board['name'] ?></a>
+		</li>
 <?php endforeach; ?>
 		<li class="pure-menu-heading">Admin</li>
 		<li><a href="#">Setting</a></li>

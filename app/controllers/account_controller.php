@@ -128,7 +128,7 @@ class AccountController extends \Theogony\ControllerBase
 				'email' => $_POST['email']
 			])->run();
 
-			SessionHelper::loginUser($res['id']);
+			SessionHelper::loginUser($res);
 			if (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] === 'true')
 				$_->referral = 'account/active';
 			else {
@@ -166,6 +166,10 @@ class AccountController extends \Theogony\ControllerBase
 					])->run();
 					$_->status = 1;
 					$_->info = "Activated! Enjoy your {$config->site->title} life.";
+					$account = $db->from('accounts')->where([
+						'id' => $_SESSION['user_id']
+					])->limit(1)->run();
+					SessionHelper::loginUser($account);
 				} elseif (count($ticket) == 0 || strtotime($ticket[0]['expire_on']) - time() < 0) { // send a new one
 					$token = sha1($account['username'] . '$' . md5(time()));
 					$ticket = $db->insert('tickets')->value([
